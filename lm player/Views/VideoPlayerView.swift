@@ -132,10 +132,11 @@ struct VideoPlayerView: View {
             VideoManager.shared.updateViewCount(video)
 
             // Restore playback position if enabled
-            if SettingsManager.shared.rememberPlaybackPosition,
-               let savedPosition = video.lastPlaybackPosition,
-               savedPosition > 0 {
-                viewModel.seek(to: savedPosition)
+            if SettingsManager.shared.rememberPlaybackPosition {
+                let savedPosition = video.lastPlaybackPosition
+                if savedPosition > 0 {
+                    viewModel.seek(to: savedPosition)
+                }
             }
 
             viewModel.play()

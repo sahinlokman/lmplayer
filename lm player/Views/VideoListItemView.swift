@@ -102,7 +102,8 @@ struct VideoListItemView: View {
                 }
 
                 // Progress bar if video was partially watched
-                if let position = video.lastPlaybackPosition, position > 0 {
+                let position = video.lastPlaybackPosition
+                if position > 0 {
                     let progress = position / video.duration
                     if progress < 0.95 { // Don't show if almost finished
                         GeometryReader { geometry in

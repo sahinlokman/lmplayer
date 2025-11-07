@@ -48,20 +48,19 @@ class SettingsManager: ObservableObject {
 
     // MARK: - Initialization
     private init() {
-        self.defaultPlaybackSpeed = defaults.float(forKey: Keys.defaultPlaybackSpeed)
-        if self.defaultPlaybackSpeed == 0 {
-            self.defaultPlaybackSpeed = 1.0
-        }
+        // Load values from UserDefaults
+        let savedSpeed = defaults.float(forKey: Keys.defaultPlaybackSpeed)
+        let savedShowThumbnails = defaults.object(forKey: Keys.showThumbnails)
 
+        // Initialize all properties first
+        self.defaultPlaybackSpeed = savedSpeed == 0 ? 1.0 : savedSpeed
         self.autoPlayNextVideo = defaults.bool(forKey: Keys.autoPlayNextVideo)
         self.rememberPlaybackPosition = defaults.bool(forKey: Keys.rememberPlaybackPosition)
+        self.showThumbnails = savedShowThumbnails == nil ? true : defaults.bool(forKey: Keys.showThumbnails)
 
-        // Show thumbnails is true by default
-        if defaults.object(forKey: Keys.showThumbnails) == nil {
-            self.showThumbnails = true
+        // Set default for showThumbnails if not set
+        if savedShowThumbnails == nil {
             defaults.set(true, forKey: Keys.showThumbnails)
-        } else {
-            self.showThumbnails = defaults.bool(forKey: Keys.showThumbnails)
         }
     }
 
