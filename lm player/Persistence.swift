@@ -14,9 +14,15 @@ struct PersistenceController {
     static let preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+        for i in 0..<5 {
+            let newVideo = Video(context: viewContext)
+            newVideo.id = UUID()
+            newVideo.title = "Sample Video \(i + 1)"
+            newVideo.fileURL = "/sample/video\(i).mp4"
+            newVideo.duration = Double.random(in: 60...3600)
+            newVideo.fileSize = Int64.random(in: 1_000_000...100_000_000)
+            newVideo.dateAdded = Date()
+            newVideo.isFavorite = i % 2 == 0
         }
         do {
             try viewContext.save()
