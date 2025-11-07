@@ -16,6 +16,7 @@ struct VideoListView: View {
     @State private var selectedVideo: Video?
     @State private var showingPlayer = false
     @State private var isImporting = false
+    @State private var showingSettings = false
 
     let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -86,6 +87,16 @@ struct VideoListView: View {
                 }
             }
             .navigationTitle("My Videos")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showingSettings = true
+                    }) {
+                        Image(systemName: "gear")
+                            .foregroundColor(.primary)
+                    }
+                }
+            }
             .sheet(isPresented: $showingFilePicker) {
                 DocumentPicker(isPresented: $showingFilePicker) { url in
                     importVideo(from: url)
@@ -98,6 +109,9 @@ struct VideoListView: View {
             }
             .fullScreenCover(item: $selectedVideo) { video in
                 VideoPlayerView(video: video)
+            }
+            .sheet(isPresented: $showingSettings) {
+                SettingsView()
             }
             .confirmationDialog("Import Video", isPresented: $showingImportOptions) {
                 Button("From Files") {

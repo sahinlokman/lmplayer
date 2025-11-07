@@ -115,10 +115,12 @@ struct VideoPlayerView: View {
                     currentTime: $viewModel.currentTime,
                     duration: $viewModel.duration,
                     volume: $viewModel.volume,
+                    playbackSpeed: $viewModel.playbackSpeed,
                     onPlayPause: { viewModel.togglePlayPause() },
                     onSeek: { time in viewModel.seek(to: time) },
                     onSkipForward: { viewModel.skip(seconds: 15) },
-                    onSkipBackward: { viewModel.skip(seconds: -15) }
+                    onSkipBackward: { viewModel.skip(seconds: -15) },
+                    onSpeedChange: { speed in viewModel.setPlaybackSpeed(speed) }
                 )
                 .transition(.opacity)
             }
@@ -170,6 +172,11 @@ class VideoPlayerViewModel: ObservableObject {
             player.volume = volume
         }
     }
+    @Published var playbackSpeed: Float = 1.0 {
+        didSet {
+            player.rate = isPlaying ? playbackSpeed : 0
+        }
+    }
 
     init(video: Video) {
         guard let urlString = video.fileURL,
@@ -180,6 +187,10 @@ class VideoPlayerViewModel: ObservableObject {
 
         self.player = AVPlayer(url: url)
         self.player.volume = volume
+
+        // Set default playback speed from settings
+        let defaultSpeed = SettingsManager.shared.defaultPlaybackSpeed
+        self.playbackSpeed = defaultSpeed
 
         setupTimeObserver()
         loadDuration()
@@ -216,13 +227,20 @@ class VideoPlayerViewModel: ObservableObject {
     }
 
     func play() {
-        player.play()
+        player.rate = playbackSpeed
         isPlaying = true
     }
 
     func pause() {
         player.pause()
         isPlaying = false
+    }
+
+    func setPlaybackSpeed(_ speed: Float) {
+        playbackSpeed = speed
+        if isPlaying {
+            player.rate = speed
+        }
     }
 
     func togglePlayPause() {
