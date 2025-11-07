@@ -68,7 +68,7 @@ struct PlayerControlsView: View {
             // Controls
             HStack(spacing: 40) {
                 Button(action: onSkipBackward) {
-                    Image(systemName: "gobackward.15")
+                    Image(systemName: "gobackward.10")
                         .font(.system(size: 28))
                         .foregroundColor(.white)
                 }
@@ -80,7 +80,7 @@ struct PlayerControlsView: View {
                 }
 
                 Button(action: onSkipForward) {
-                    Image(systemName: "goforward.15")
+                    Image(systemName: "goforward.10")
                         .font(.system(size: 28))
                         .foregroundColor(.white)
                 }

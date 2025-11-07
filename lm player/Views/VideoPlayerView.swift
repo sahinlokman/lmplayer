@@ -118,8 +118,8 @@ struct VideoPlayerView: View {
                     playbackSpeed: $viewModel.playbackSpeed,
                     onPlayPause: { viewModel.togglePlayPause() },
                     onSeek: { time in viewModel.seek(to: time) },
-                    onSkipForward: { viewModel.skip(seconds: 15) },
-                    onSkipBackward: { viewModel.skip(seconds: -15) },
+                    onSkipForward: { viewModel.skip(seconds: 10) },
+                    onSkipBackward: { viewModel.skip(seconds: -10) },
                     onSpeedChange: { speed in viewModel.setPlaybackSpeed(speed) }
                 )
                 .transition(.opacity)
