@@ -166,8 +166,8 @@ struct VideoListItemView: View {
             }
         }
         .sheet(isPresented: $showingShareSheet) {
-            if let fileURL = video.fileURL,
-               let url = URL(fileURLWithPath: fileURL) {
+            if let fileURL = video.fileURL {
+                let url = URL(fileURLWithPath: fileURL)
                 ShareSheet(items: [url])
             }
         }
