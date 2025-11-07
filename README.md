@@ -11,23 +11,33 @@ A modern iOS video player application built with SwiftUI that allows you to impo
 - 🗑️ Delete videos with file cleanup
 - 🖼️ Automatic thumbnail generation
 - 📊 View video information (duration, file size, date added)
+- 🔍 Search videos by name
+- 🎯 Filter videos (All, Favorites, Recently Watched)
+- 📋 Sort videos (Date, Name, Duration, Size)
+- 📱 Grid/List view modes
+- 📤 Share videos with other apps
+- 👁️ View count tracking
+- 📅 Last watched date tracking
 
 ### Video Playback
 - ▶️ Full-featured video player with custom controls
 - ⚡ Playback speed control (0.5x, 0.75x, 1x, 1.25x, 1.5x, 2x)
-- ⏩ Skip forward/backward (15 seconds)
+- ⏩ Skip forward/backward (10 seconds)
 - 🔊 Volume control
 - 📱 Full-screen playback
 - 🎯 Precise timeline scrubbing
 - ⏸️ Play/Pause with tap gesture
 - 🕹️ Auto-hide controls
+- 💾 Resume from last position
+- 📊 Progress bar on video cards
 
 ### Settings
 - ⚙️ Customizable default playback speed
 - 🎬 Auto-play next video (coming soon)
-- 💾 Remember playback position (coming soon)
+- 💾 Remember playback position
 - 🖼️ Toggle thumbnail display
 - 📈 Storage statistics
+- 📊 Video analytics
 
 ## Requirements 📋
 
@@ -50,14 +60,15 @@ The app follows a clean architecture pattern with:
 ```
 lm player/
 ├── Services/
-│   ├── VideoManager.swift        # Video CRUD operations
+│   ├── VideoManager.swift        # Video CRUD, search, filter operations
 │   ├── VideoImportService.swift  # Import from Files/Photos
 │   └── SettingsManager.swift     # App settings management
 ├── Views/
-│   ├── VideoListView.swift       # Main video list
-│   ├── VideoCardView.swift       # Video card component
-│   ├── VideoPlayerView.swift     # Video player
-│   ├── PlayerControlsView.swift  # Player controls UI
+│   ├── VideoListView.swift       # Main video list with search/filter
+│   ├── VideoCardView.swift       # Video card component (grid)
+│   ├── VideoListItemView.swift   # Video item component (list)
+│   ├── VideoPlayerView.swift     # Video player with tracking
+│   ├── PlayerControlsView.swift  # Player controls UI with speed
 │   └── SettingsView.swift        # Settings screen
 ├── Persistence.swift             # Core Data stack
 └── lm_playerApp.swift           # App entry point

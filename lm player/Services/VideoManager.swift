@@ -133,6 +133,82 @@ class VideoManager: ObservableObject {
         }
     }
 
+    // MARK: - Playback Position Tracking
+    func updatePlaybackPosition(_ video: Video, position: Double) {
+        let context = persistenceController.container.viewContext
+        video.lastPlaybackPosition = position
+
+        do {
+            try context.save()
+        } catch {
+            print("Error updating playback position: \(error.localizedDescription)")
+        }
+    }
+
+    func updateViewCount(_ video: Video) {
+        let context = persistenceController.container.viewContext
+        video.viewCount += 1
+        video.lastWatchedDate = Date()
+
+        do {
+            try context.save()
+            fetchVideos()
+        } catch {
+            print("Error updating view count: \(error.localizedDescription)")
+        }
+    }
+
+    // MARK: - Recently Watched
+    func getRecentlyWatched(limit: Int = 10) -> [Video] {
+        return videos
+            .filter { $0.lastWatchedDate != nil }
+            .sorted { ($0.lastWatchedDate ?? Date.distantPast) > ($1.lastWatchedDate ?? Date.distantPast) }
+            .prefix(limit)
+            .map { $0 }
+    }
+
+    // MARK: - Search and Filter
+    func searchVideos(query: String) -> [Video] {
+        if query.isEmpty {
+            return videos
+        }
+        return videos.filter { video in
+            (video.title?.lowercased().contains(query.lowercased()) ?? false)
+        }
+    }
+
+    func filterVideos(by filter: VideoFilter) -> [Video] {
+        switch filter {
+        case .all:
+            return videos
+        case .favorites:
+            return videos.filter { $0.isFavorite }
+        case .recentlyWatched:
+            return getRecentlyWatched()
+        }
+    }
+
+    func sortVideos(_ videos: [Video], by sortOption: VideoSortOption) -> [Video] {
+        switch sortOption {
+        case .dateAddedNewest:
+            return videos.sorted { ($0.dateAdded ?? Date.distantPast) > ($1.dateAdded ?? Date.distantPast) }
+        case .dateAddedOldest:
+            return videos.sorted { ($0.dateAdded ?? Date.distantPast) < ($1.dateAdded ?? Date.distantPast) }
+        case .nameAscending:
+            return videos.sorted { ($0.title ?? "") < ($1.title ?? "") }
+        case .nameDescending:
+            return videos.sorted { ($0.title ?? "") > ($1.title ?? "") }
+        case .durationShortest:
+            return videos.sorted { $0.duration < $1.duration }
+        case .durationLongest:
+            return videos.sorted { $0.duration > $1.duration }
+        case .sizesmallest:
+            return videos.sorted { $0.fileSize < $1.fileSize }
+        case .sizeLargest:
+            return videos.sorted { $0.fileSize > $1.fileSize }
+        }
+    }
+
     // MARK: - Generate Thumbnail
     private func generateThumbnail(for asset: AVAsset) -> UIImage? {
         let imageGenerator = AVAssetImageGenerator(asset: asset)
@@ -170,4 +246,28 @@ class VideoManager: ObservableObject {
         formatter.countStyle = .file
         return formatter.string(fromByteCount: size)
     }
+}
+
+// MARK: - Filter and Sort Enums
+enum VideoFilter: String, CaseIterable {
+    case all = "All Videos"
+    case favorites = "Favorites"
+    case recentlyWatched = "Recently Watched"
+}
+
+enum VideoSortOption: String, CaseIterable {
+    case dateAddedNewest = "Date Added (Newest)"
+    case dateAddedOldest = "Date Added (Oldest)"
+    case nameAscending = "Name (A-Z)"
+    case nameDescending = "Name (Z-A)"
+    case durationShortest = "Duration (Shortest)"
+    case durationLongest = "Duration (Longest)"
+    case sizesmallest = "Size (Smallest)"
+    case sizeLargest = "Size (Largest)"
+}
+
+// MARK: - View Mode Enum
+enum VideoViewMode: String, CaseIterable {
+    case grid = "Grid"
+    case list = "List"
 }
