@@ -9,6 +9,9 @@
         <attribute name="thumbnailData" optional="YES" attributeType="Binary"/>
         <attribute name="dateAdded" optional="NO" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="isFavorite" optional="NO" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="lastPlaybackPosition" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="lastWatchedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="viewCount" optional="NO" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <elements>
         <element name="Video" positionX="-63" positionY="-18" width="128" height="208"/>
